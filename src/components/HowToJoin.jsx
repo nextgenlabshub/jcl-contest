@@ -22,29 +22,33 @@ const steps = [
 export default function HowToJoin({ mainPostUrl }) {
   return (
     <section>
-      <SectionHead
-        eyebrow="Panduan"
-        title="Cara Sertai"
-        right={
-          mainPostUrl ? (
-            <a
-              href={safeHref(mainPostUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-ink px-4 py-2 text-sm font-semibold text-paper shadow-[3px_3px_0_0_var(--color-flame)] transition-transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              📌 Buka Post Utama
-            </a>
-          ) : (
-            <span
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-ink/25 px-4 py-2 text-sm text-inksoft"
-              title="Set mainPostUrl dalam src/contest.config.js"
-            >
-              📌 Post utama belum ditetapkan
+      <SectionHead eyebrow="Panduan" title="Cara Sertai" />
+
+      {mainPostUrl ? (
+        <a
+          href={safeHref(mainPostUrl)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 flex flex-col items-center gap-2 rounded-2xl border-2 border-ink bg-ink px-6 py-6 text-center text-paper shadow-[6px_6px_0_0_var(--color-flame)] transition-transform hover:-translate-y-1 active:translate-y-0 sm:flex-row sm:justify-center sm:gap-5"
+        >
+          <span className="text-5xl">📌</span>
+          <span className="flex flex-col sm:items-start">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+              Langkah 1 — Klik di sini
             </span>
-          )
-        }
-      />
+            <span className="font-display text-2xl font-extrabold leading-tight sm:text-3xl">
+              Buka &amp; <span className="text-flame">QUOTE POST INI</span>
+            </span>
+          </span>
+        </a>
+      ) : (
+        <span
+          className="mt-5 flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink/25 px-6 py-6 text-center text-inksoft"
+          title="Set mainPostUrl dalam src/contest.config.js"
+        >
+          📌 Post utama belum ditetapkan
+        </span>
+      )}
 
       <ol className="mt-5 grid gap-4 sm:grid-cols-3">
         {steps.map((s, i) => (
