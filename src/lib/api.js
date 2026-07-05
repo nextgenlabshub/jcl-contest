@@ -71,24 +71,23 @@ export async function submitEntry({ username, threads_link, phone, counts }) {
   if (!cleanLink) throw new Error('Pautan thread tidak sah.')
   if (!isValidPhone(cleanTel)) throw new Error('No telefon tidak sah.')
 
-  const payload = {
-    username: cleanName,
-    threads_link: cleanLink,
-    phone: cleanTel,
-    updated_at: new Date().toISOString(),
-  }
+  // Sahkan setiap metrik (kini DB hanya ada kolum `views`).
+  const clean = {}
   for (const m of contest.metrics) {
     const value = cleanCount(counts?.[m.key])
     if (value === null) throw new Error(`Nilai ${m.label} tidak sah.`)
-    payload[m.key] = value
+    clean[m.key] = value
   }
 
-  // Jangan pulangkan '*' — anon tiada SELECT pada kolum phone.
-  const { data, error } = await supabase
-    .from(TABLE)
-    .upsert(payload, { onConflict: 'threads_link' })
-    .select(PUBLIC_COLS)
+  // Hantar melalui fungsi pelayan (security definer). Ia buat upsert bagi
+  // pihak peserta — jadi kolum `phone` kekal PRIVASI (anon tiada keizinan
+  // tulis/baca terus pada jadual), dan upsert tidak memerlukan SELECT penuh.
+  const { error } = await supabase.rpc('submit_entry', {
+    p_username: cleanName,
+    p_threads_link: cleanLink,
+    p_phone: cleanTel,
+    p_views: clean.views ?? 0,
+  })
 
   if (error) throw error
-  return data?.[0]
 }

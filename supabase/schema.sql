@@ -124,5 +124,38 @@ grant select on public.contest_state to anon, authenticated;
 grant update on public.contest_state to authenticated;
 grant execute on function public.contest_is_open() to anon, authenticated;
 
+-- 4) FUNGSI HANTAR PENYERTAAN ---------------------------------
+--  Upsert (ON CONFLICT DO UPDATE) memerlukan SELECT peringkat-jadual
+--  penuh — yang akan mendedahkan `phone`. Jadi anon panggil fungsi ini
+--  (security definer) yang buat upsert sebagai PEMILIK jadual; phone
+--  kekal privasi. CHECK constraint jadual masih menapis data buruk.
+create or replace function public.submit_entry(
+  p_username     text,
+  p_threads_link text,
+  p_phone        text,
+  p_views        integer
+) returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not public.contest_is_open() then
+    raise exception 'Peraduan telah tamat.';
+  end if;
+
+  insert into public.threads_leaderboard (username, threads_link, phone, views, updated_at)
+  values (p_username, p_threads_link, p_phone, p_views, now())
+  on conflict (threads_link) do update
+    set username   = excluded.username,
+        phone      = excluded.phone,
+        views      = excluded.views,
+        updated_at = now();
+end;
+$$;
+
+revoke all on function public.submit_entry(text, text, text, integer) from public;
+grant execute on function public.submit_entry(text, text, text, integer) to anon, authenticated;
+
 -- (Tiada Storage diperlukan — penyertaan disahkan melalui pautan thread,
 --  bukan muat naik screenshot.)
