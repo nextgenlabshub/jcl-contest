@@ -6,6 +6,7 @@ export const LIMITS = {
   usernameMax: 30,
   linkMax: 500,
   countMax: 1_000_000_000, // 1 bilion — jauh melebihi realiti, elak nombor mengarut
+  phoneMax: 15,
 }
 
 // Username Threads: huruf, nombor, titik, garis bawah sahaja.
@@ -63,6 +64,24 @@ export function cleanCount(raw) {
   if (!Number.isFinite(n) || !Number.isInteger(n)) return null
   if (n < 0 || n > LIMITS.countMax) return null
   return n
+}
+
+// No telefon Malaysia, format tempatan: 01X diikuti 7–9 digit
+// (cth 0123456789 / 01123456789). Tanpa '+6'.
+const PHONE_RE = /^01[0-9]{7,9}$/
+
+/**
+ * Buang semua bukan-digit (ruang, '-', kurungan). Jika pengguna taip awalan
+ * antarabangsa (+60 / 60), tukar kembali kepada format tempatan (0…).
+ */
+export function cleanPhone(raw) {
+  let s = String(raw ?? '').replace(/\D+/g, '')
+  if (s.startsWith('60')) s = '0' + s.slice(2)
+  return s.slice(0, LIMITS.phoneMax)
+}
+
+export function isValidPhone(p) {
+  return PHONE_RE.test(p)
 }
 
 /** Untuk render href dengan selamat — elak javascript:/data: URL. */

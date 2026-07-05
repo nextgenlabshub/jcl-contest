@@ -17,6 +17,10 @@ create table if not exists public.threads_leaderboard (
            and threads_link ~* '^https://(www\.)?threads\.(net|com)/'),
   -- Views (impressions) — nombor yang menentukan pemenang.
   views         integer     not null default 0 check (views between 0 and 2000000000),
+  -- No telefon peserta (data peribadi). Format tempatan 01X, tanpa '+6'.
+  -- Anon boleh TULIS tapi TAK boleh BACA (lihat GRANT di bawah).
+  phone         varchar(15)
+    check (phone is null or phone ~ '^01[0-9]{7,9}$'),
   updated_at    timestamptz not null    default now(),
   -- Kunci untuk upsert: satu baris setiap pautan thread.
   constraint threads_leaderboard_link_key unique (threads_link)
@@ -106,7 +110,16 @@ create policy "state_update"
 --  Kebenaran peringkat-table (berasingan dari RLS). RLS tentukan
 --  BARIS mana; GRANT tentukan OPERASI mana yang dibenarkan.
 grant usage on schema public to anon, authenticated;
-grant select, insert, update on public.threads_leaderboard to anon, authenticated;
+-- KEIZINAN PERINGKAT-KOLUM untuk threads_leaderboard:
+--  Anon boleh BACA semua kolum KECUALI `phone` (data peribadi).
+--  Anon boleh TULIS `phone` (insert/update) tapi tak boleh baca balik.
+--  Untuk lihat no telefon: guna Supabase Dashboard (service_role) sahaja.
+grant select (id, created_at, username, threads_link, views, updated_at)
+  on public.threads_leaderboard to anon, authenticated;
+grant insert (username, threads_link, views, phone, updated_at)
+  on public.threads_leaderboard to anon, authenticated;
+grant update (username, threads_link, views, phone, updated_at)
+  on public.threads_leaderboard to anon, authenticated;
 grant select on public.contest_state to anon, authenticated;
 grant update on public.contest_state to authenticated;
 grant execute on function public.contest_is_open() to anon, authenticated;

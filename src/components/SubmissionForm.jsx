@@ -8,10 +8,13 @@ import {
   isValidUsername,
   cleanThreadsUrl,
   cleanCount,
+  cleanPhone,
+  isValidPhone,
   LIMITS,
 } from '../lib/validate'
 
 const emptyForm = () => ({
+  phone: '',
   username: '',
   threads_link: '',
   ...Object.fromEntries(contest.metrics.map((m) => [m.key, ''])),
@@ -38,6 +41,11 @@ export default function SubmissionForm({ onClose, onSuccess }) {
 
   function validate() {
     const e = {}
+
+    const phone = cleanPhone(form.phone)
+    if (!phone) e.phone = 'Wajib diisi.'
+    else if (!isValidPhone(phone))
+      e.phone = 'Format 01X tanpa +6 — cth 0123456789.'
 
     const username = cleanUsername(form.username)
     if (!username) e.username = 'Wajib diisi.'
@@ -77,6 +85,7 @@ export default function SubmissionForm({ onClose, onSuccess }) {
       await submitEntry({
         username: cleanUsername(form.username),
         threads_link: cleanThreadsUrl(form.threads_link),
+        phone: cleanPhone(form.phone),
         counts,
       })
       onSuccess?.()
@@ -118,6 +127,28 @@ export default function SubmissionForm({ onClose, onSuccess }) {
           Isi angka dari Insights post anda. Jika pautan sudah wujud, ia dikemas
           kini automatik.
         </p>
+
+        <label className="mb-4 block">
+          <span className="mb-1.5 block text-sm font-semibold text-ink">
+            No. Telefon <span className="text-inksoft">(untuk dihubungi jika menang)</span>
+          </span>
+          <input
+            className={field}
+            type="tel"
+            inputMode="numeric"
+            placeholder="cth: 0123456789"
+            value={form.phone}
+            onChange={(e) => update('phone', e.target.value)}
+            maxLength={LIMITS.phoneMax}
+            autoComplete="tel"
+            disabled={submitting}
+          />
+          {errors.phone && (
+            <span className="mt-1 block text-xs font-medium text-flame">
+              {errors.phone}
+            </span>
+          )}
+        </label>
 
         <label className="mb-4 block">
           <span className="mb-1.5 block text-sm font-semibold text-ink">
