@@ -66,13 +66,14 @@ export function cleanCount(raw) {
   return n
 }
 
-// No telefon Malaysia, format tempatan: 01X diikuti 7–9 digit
-// (cth 0123456789 / 01123456789). Tanpa '+6'.
-const PHONE_RE = /^01[0-9]{7,9}$/
+// No telefon format tempatan: mula dengan '0', diikuti 7–14 digit.
+// Longgar dengan sengaja (sesetengah nombor lebih panjang) — yang penting
+// TANPA '+60'. cleanPhone menukar +60/60 kembali kepada '0…'.
+const PHONE_RE = /^0[0-9]{7,14}$/
 
 /**
- * Buang semua bukan-digit (ruang, '-', kurungan). Jika pengguna taip awalan
- * antarabangsa (+60 / 60), tukar kembali kepada format tempatan (0…).
+ * Buang semua bukan-digit (ruang, '-', kurungan, '+'). Jika pengguna taip
+ * awalan antarabangsa (+60 / 60), tukar kembali kepada format tempatan (0…).
  */
 export function cleanPhone(raw) {
   let s = String(raw ?? '').replace(/\D+/g, '')

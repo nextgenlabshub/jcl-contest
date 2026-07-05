@@ -17,10 +17,10 @@ create table if not exists public.threads_leaderboard (
            and threads_link ~* '^https://(www\.)?threads\.(net|com)/'),
   -- Views (impressions) — nombor yang menentukan pemenang.
   views         integer     not null default 0 check (views between 0 and 2000000000),
-  -- No telefon peserta (data peribadi). Format tempatan 01X, tanpa '+6'.
-  -- Anon boleh TULIS tapi TAK boleh BACA (lihat GRANT di bawah).
+  -- No telefon peserta (data peribadi). Format tempatan (mula '0'), tanpa
+  -- '+60'. Longgar: 8–15 digit. Anon boleh TULIS tapi TAK boleh BACA.
   phone         varchar(15)
-    check (phone is null or phone ~ '^01[0-9]{7,9}$'),
+    check (phone is null or phone ~ '^0[0-9]{7,14}$'),
   updated_at    timestamptz not null    default now(),
   -- Kunci untuk upsert: satu baris setiap pautan thread.
   constraint threads_leaderboard_link_key unique (threads_link)

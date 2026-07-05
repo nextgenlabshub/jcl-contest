@@ -45,7 +45,7 @@ export default function SubmissionForm({ onClose, onSuccess }) {
     const phone = cleanPhone(form.phone)
     if (!phone) e.phone = 'Wajib diisi.'
     else if (!isValidPhone(phone))
-      e.phone = 'Format 01X tanpa +6 — cth 0123456789.'
+      e.phone = 'Guna format tempatan tanpa +60 — cth 0123456789.'
 
     const username = cleanUsername(form.username)
     if (!username) e.username = 'Wajib diisi.'
