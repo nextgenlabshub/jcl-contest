@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* ---- Brand tokens (guna sebagai bg-cream, text-ink, bg-flame, dll) ---- */
+@theme {
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui,
+    sans-serif;
+
+  --color-cream: #f7f0e3;
+  --color-paper: #fffdf7;
+  --color-ink: #1c1a15;
+  --color-inksoft: #6b6559;
+  --color-line: #e3d9c6;
+
+  --color-flame: #e4451d;
+  --color-flamedark: #c1370f;
+  --color-gold: #b98a2b;
+  --color-silver: #8b8f98;
+  --color-bronze: #b06a38;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  /* Kertas krim + grid titik halus — nampak bersengaja, bukan gradient AI */
+  background-color: var(--color-cream);
+  background-image: radial-gradient(
+    rgba(28, 26, 21, 0.055) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+/* Nombor sejajar (tabular) supaya leaderboard kemas */
+.nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
