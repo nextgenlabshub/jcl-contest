@@ -4,7 +4,6 @@ import {
   cleanUsername,
   isValidUsername,
   cleanThreadsUrl,
-  cleanCount,
   cleanPhone,
   isValidPhone,
 } from './validate'
@@ -58,10 +57,12 @@ export async function fetchLeaderboard() {
 }
 
 /**
- * Insert atau update penyertaan.
- * Konflik pada `threads_link` -> baris sedia ada dikemas kini (upsert).
+ * Insert atau update penyertaan (username, pautan, no telefon SAHAJA).
+ * `views` TIDAK dihantar dari sini — hanya admin set views (Admin Dashboard).
+ * Konflik pada `threads_link` -> username & phone dikemas kini (upsert),
+ * views dibiarkan seperti sedia ada.
  */
-export async function submitEntry({ username, threads_link, phone, counts }) {
+export async function submitEntry({ username, threads_link, phone }) {
   // Sanitasi semula di sini (defense-in-depth) walaupun borang sudah sahkan.
   const cleanName = cleanUsername(username)
   const cleanLink = cleanThreadsUrl(threads_link)
@@ -71,14 +72,6 @@ export async function submitEntry({ username, threads_link, phone, counts }) {
   if (!cleanLink) throw new Error('Pautan thread tidak sah.')
   if (!isValidPhone(cleanTel)) throw new Error('No telefon tidak sah.')
 
-  // Sahkan setiap metrik (kini DB hanya ada kolum `views`).
-  const clean = {}
-  for (const m of contest.metrics) {
-    const value = cleanCount(counts?.[m.key])
-    if (value === null) throw new Error(`Nilai ${m.label} tidak sah.`)
-    clean[m.key] = value
-  }
-
   // Hantar melalui fungsi pelayan (security definer). Ia buat upsert bagi
   // pihak peserta — jadi kolum `phone` kekal PRIVASI (anon tiada keizinan
   // tulis/baca terus pada jadual), dan upsert tidak memerlukan SELECT penuh.
@@ -86,7 +79,6 @@ export async function submitEntry({ username, threads_link, phone, counts }) {
     p_username: cleanName,
     p_threads_link: cleanLink,
     p_phone: cleanTel,
-    p_views: clean.views ?? 0,
   })
 
   if (error) throw error

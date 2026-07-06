@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react'
 import { submitEntry } from '../lib/api'
-import { contest } from '../contest.config'
-import { computeScore, singleMetric } from '../lib/scoring'
-import { formatViews } from '../lib/format'
 import {
   cleanUsername,
   isValidUsername,
   cleanThreadsUrl,
-  cleanCount,
   cleanPhone,
   isValidPhone,
   LIMITS,
@@ -17,7 +13,6 @@ const emptyForm = () => ({
   phone: '',
   username: '',
   threads_link: '',
-  ...Object.fromEntries(contest.metrics.map((m) => [m.key, ''])),
 })
 
 export default function SubmissionForm({ onClose, onSuccess }) {
@@ -36,8 +31,6 @@ export default function SubmissionForm({ onClose, onSuccess }) {
     setForm((f) => ({ ...f, [key]: value }))
     setErrors((e) => ({ ...e, [key]: undefined }))
   }
-
-  const liveScore = computeScore(form)
 
   function validate() {
     const e = {}
@@ -58,16 +51,6 @@ export default function SubmissionForm({ onClose, onSuccess }) {
       e.threads_link = 'Pautan mesti URL threads.net / threads.com yang sah.'
     }
 
-    for (const m of contest.metrics) {
-      const v = form[m.key]
-      if (v !== '' && cleanCount(v) === null) {
-        const n = Number(v)
-        if (!Number.isInteger(n)) e[m.key] = 'Nombor bulat sahaja.'
-        else if (n < 0) e[m.key] = 'Tidak boleh negatif.'
-        else e[m.key] = 'Nombor terlalu besar.'
-      }
-    }
-
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -79,14 +62,10 @@ export default function SubmissionForm({ onClose, onSuccess }) {
 
     setSubmitting(true)
     try {
-      const counts = Object.fromEntries(
-        contest.metrics.map((m) => [m.key, cleanCount(form[m.key])]),
-      )
       await submitEntry({
         username: cleanUsername(form.username),
         threads_link: cleanThreadsUrl(form.threads_link),
         phone: cleanPhone(form.phone),
-        counts,
       })
       onSuccess?.()
     } catch (err) {
@@ -111,7 +90,7 @@ export default function SubmissionForm({ onClose, onSuccess }) {
       >
         <div className="mb-1 flex items-center justify-between">
           <h2 className="font-display text-2xl font-extrabold text-ink">
-            Hantar / Kemas Kini
+            Sertai Peraduan
           </h2>
           <button
             type="button"
@@ -124,8 +103,8 @@ export default function SubmissionForm({ onClose, onSuccess }) {
           </button>
         </div>
         <p className="mb-5 text-sm text-inksoft">
-          Isi angka dari Insights post anda. Jika pautan sudah wujud, ia dikemas
-          kini automatik.
+          Daftar penyertaan anda. Views akan dikira & dikemas kini oleh penganjur
+          sepanjang peraduan — anda tak perlu isi angka.
         </p>
 
         <label className="mb-4 block">
@@ -190,69 +169,6 @@ export default function SubmissionForm({ onClose, onSuccess }) {
             </span>
           )}
         </label>
-
-        {singleMetric ? (
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-semibold text-ink">
-              Jumlah {singleMetric.label} (Impressions)
-            </span>
-            <input
-              type="number"
-              inputMode="numeric"
-              min="0"
-              step="1"
-              className={field}
-              placeholder="cth: 15230"
-              value={form[singleMetric.key]}
-              onChange={(e) => update(singleMetric.key, e.target.value)}
-              disabled={submitting}
-            />
-            {errors[singleMetric.key] && (
-              <span className="mt-1 block text-xs font-medium text-flame">
-                {errors[singleMetric.key]}
-              </span>
-            )}
-          </label>
-        ) : (
-          <>
-            <span className="mb-1.5 block text-sm font-semibold text-ink">
-              Engagement <span className="text-inksoft">(kosong = 0)</span>
-            </span>
-            <div className="grid grid-cols-2 gap-3">
-              {contest.metrics.map((m) => (
-                <label key={m.key} className="block">
-                  <span className="mb-1 block text-xs font-medium text-inksoft">
-                    {m.emoji} {m.label}
-                  </span>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min="0"
-                    step="1"
-                    className={field}
-                    placeholder="0"
-                    value={form[m.key]}
-                    onChange={(e) => update(m.key, e.target.value)}
-                    disabled={submitting}
-                  />
-                  {errors[m.key] && (
-                    <span className="mt-1 block text-xs font-medium text-flame">
-                      {errors[m.key]}
-                    </span>
-                  )}
-                </label>
-              ))}
-            </div>
-            <div className="mt-4 flex items-center justify-between rounded-xl border-2 border-ink bg-ink px-4 py-3 text-paper">
-              <span className="text-xs font-bold uppercase tracking-[0.15em] text-gold">
-                Anggaran Skor
-              </span>
-              <span className="nums font-display text-2xl font-extrabold">
-                {formatViews(liveScore)}
-              </span>
-            </div>
-          </>
-        )}
 
         {serverError && (
           <div className="mt-4 rounded-lg border-2 border-flame/40 bg-flame/10 px-3 py-2 text-sm font-medium text-flamedark">

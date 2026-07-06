@@ -32,8 +32,8 @@ export const contest = {
   // Bilangan pemenang yang dipaparkan di skrin keputusan.
   winnersCount: 4,
 
-  // Kunci pentadbir untuk butang "Sahkan Rasmi" (buka guna ?admin=KUNCI).
-  // Biar '' semasa demo. WAJIB tukar & guna Supabase Auth sebelum go-live.
+  // (Tidak lagi digunakan) — pentadbir kini log masuk di halaman ?admin
+  // guna Supabase Auth (email + kata laluan). Lihat AdminDashboard.jsx.
   adminKey: '',
 
   // Hadiah — tukar 'reward' kepada hadiah sebenar anda.

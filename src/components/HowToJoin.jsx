@@ -15,7 +15,7 @@ const steps = [
   {
     n: '03',
     title: 'Daftar',
-    desc: 'Masukkan pautan thread & jumlah views anda di sini, dan kemas kini bila-bila ia bertambah.',
+    desc: 'Masukkan username, pautan thread & no telefon anda di sini. Views akan dikira & dikemas kini oleh penganjur — anda tak perlu isi.',
   },
 ]
 

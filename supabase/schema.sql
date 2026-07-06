@@ -129,11 +129,13 @@ grant execute on function public.contest_is_open() to anon, authenticated;
 --  penuh — yang akan mendedahkan `phone`. Jadi anon panggil fungsi ini
 --  (security definer) yang buat upsert sebagai PEMILIK jadual; phone
 --  kekal privasi. CHECK constraint jadual masih menapis data buruk.
+--  Peserta hanya isi username + pautan + phone. `views` ditetapkan HANYA
+--  oleh admin (Admin Dashboard). Pada hantar semula (conflict), views TIDAK
+--  disentuh supaya angka admin tidak terpadam.
 create or replace function public.submit_entry(
   p_username     text,
   p_threads_link text,
-  p_phone        text,
-  p_views        integer
+  p_phone        text
 ) returns void
 language plpgsql
 security definer
@@ -144,18 +146,18 @@ begin
     raise exception 'Peraduan telah tamat.';
   end if;
 
-  insert into public.threads_leaderboard (username, threads_link, phone, views, updated_at)
-  values (p_username, p_threads_link, p_phone, p_views, now())
+  insert into public.threads_leaderboard (username, threads_link, phone, updated_at)
+  values (p_username, p_threads_link, p_phone, now())
   on conflict (threads_link) do update
     set username   = excluded.username,
         phone      = excluded.phone,
-        views      = excluded.views,
         updated_at = now();
+  -- NOTA: `views` SENGAJA tidak dikemas kini di sini.
 end;
 $$;
 
-revoke all on function public.submit_entry(text, text, text, integer) from public;
-grant execute on function public.submit_entry(text, text, text, integer) to anon, authenticated;
+revoke all on function public.submit_entry(text, text, text) from public;
+grant execute on function public.submit_entry(text, text, text) to anon, authenticated;
 
 -- (Tiada Storage diperlukan — penyertaan disahkan melalui pautan thread,
 --  bukan muat naik screenshot.)

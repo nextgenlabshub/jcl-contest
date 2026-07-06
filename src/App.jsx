@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isSupabaseConfigured } from './lib/supabase'
-import {
-  fetchLeaderboard,
-  fetchContestState,
-  setContestFinalized,
-} from './lib/api'
+import { fetchLeaderboard, fetchContestState } from './lib/api'
 import { contest } from './contest.config'
 import { DEMO_ENTRIES } from './lib/demo'
 import { isEnded, getWinners } from './lib/contest'
@@ -18,13 +14,6 @@ import Prizes from './components/Prizes'
 import Countdown from './components/Countdown'
 import Results from './components/Results'
 import { SectionHead } from './components/ui'
-
-// Adakah pelawat seorang pentadbir? Buka guna ?admin=KUNCI pada URL.
-function checkAdmin() {
-  const param = new URLSearchParams(window.location.search).get('admin')
-  if (param == null) return false
-  return contest.adminKey ? param === contest.adminKey : true
-}
 
 function DemoNote() {
   return (
@@ -41,7 +30,6 @@ function DemoNote() {
 
 export default function App() {
   const configured = isSupabaseConfigured
-  const isAdmin = useMemo(checkAdmin, [])
 
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
@@ -49,7 +37,6 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [finalized, setFinalized] = useState(false)
-  const [finalizing, setFinalizing] = useState(false)
 
   // Auto-tukar ke mod keputusan bila masa tamat. Semakan berkala kasar —
   // setEnded(false) berulang tidak re-render (React bailout); ia flip ke
@@ -88,18 +75,6 @@ export default function App() {
   useEffect(() => {
     load()
   }, [load])
-
-  async function handleFinalize() {
-    setFinalizing(true)
-    try {
-      if (configured) await setContestFinalized(true)
-      setFinalized(true)
-    } catch (err) {
-      setError(err?.message || 'Gagal mengesahkan keputusan.')
-    } finally {
-      setFinalizing(false)
-    }
-  }
 
   // Kira skor & susun (seri: yang capai dahulu). Dilakukan di app.
   const ranked = useMemo(() => rankEntries(entries), [entries])
@@ -189,7 +164,7 @@ export default function App() {
               <span className={btnLocked}>🔒 Peraduan Telah Tamat</span>
             ) : (
               <button onClick={() => setShowForm(true)} className={btnPrimary}>
-                Hantar / Kemas Kini Views
+                Sertai Peraduan
               </button>
             )}
             <button onClick={load} className={btnGhost}>
@@ -207,13 +182,7 @@ export default function App() {
         {/* Skrin keputusan — muncul automatik bila peraduan tamat */}
         {ended && hasData && (
           <div className="mb-10">
-            <Results
-              winners={winners}
-              finalized={finalized}
-              isAdmin={isAdmin}
-              finalizing={finalizing}
-              onFinalize={handleFinalize}
-            />
+            <Results winners={winners} finalized={finalized} isAdmin={false} />
           </div>
         )}
 
