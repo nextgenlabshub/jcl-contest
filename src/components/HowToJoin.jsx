@@ -5,7 +5,7 @@ const steps = [
   {
     n: '01',
     title: 'Quote',
-    desc: 'Buka post utama, kemudian Quote Post — kongsikan bagaimana App 2ndschool boleh membantu anak-anak belajar. Boleh sertakan video, tips atau apa sahaja.',
+    desc: 'Buka post utama, kemudian Quote Post — kongsikan bagaimana App 2ndSchool.my (dahulu dikenali sebagai Junior Code Lab) boleh membantu anak-anak belajar. Boleh sertakan video, tips atau apa sahaja.',
   },
   {
     n: '02',
