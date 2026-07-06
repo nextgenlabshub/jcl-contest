@@ -78,4 +78,15 @@ export const contest = {
       images: ['/prizes/tempat4n5-1.webp', '/prizes/tempat4n5-2.webp'],
     },
   ],
+
+  // Terma & Syarat ringkas — dipapar di bawah borang penyertaan.
+  // Menghantar borang = bersetuju dengan terma ini. Edit ikut suka.
+  terms: [
+    'Penyertaan terbuka kepada semua pengguna Threads.',
+    'Anda mesti Quote Post kepada post utama peraduan — bukan post berasingan.',
+    'Maklumat yang dikumpul (username, pautan thread & no. telefon) digunakan HANYA untuk mengesahkan penyertaan dan menghubungi pemenang. Kami tidak menjual atau berkongsi data anda dengan pihak ketiga.',
+    'Kedudukan dikira berdasarkan jumlah views dan dikemas kini oleh penganjur setiap hari.',
+    'Penganjur berhak membatalkan penyertaan yang mengandungi unsur menipu, spam atau melanggar polisi Threads.',
+    'Keputusan penganjur adalah muktamad.',
+  ],
 }

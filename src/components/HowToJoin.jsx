@@ -38,6 +38,9 @@ export default function HowToJoin({ mainPostUrl }) {
             </span>
             <span className="font-display text-2xl font-extrabold leading-tight sm:text-3xl">
               Buka &amp; <span className="text-flame">QUOTE POST INI</span>
+              <span className="mt-1 block text-xs font-semibold text-paper/70 sm:text-sm">
+                (atau mana-mana post di bawah post ini)
+              </span>
             </span>
           </span>
         </a>

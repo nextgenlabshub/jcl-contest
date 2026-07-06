@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { submitEntry } from '../lib/api'
+import { contest } from '../contest.config'
 import {
   cleanUsername,
   isValidUsername,
@@ -20,6 +21,7 @@ export default function SubmissionForm({ onClose, onSuccess }) {
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [serverError, setServerError] = useState('')
+  const [showTerms, setShowTerms] = useState(false)
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && !submitting && onClose()
@@ -104,7 +106,7 @@ export default function SubmissionForm({ onClose, onSuccess }) {
         </div>
         <p className="mb-5 text-sm text-inksoft">
           Daftar penyertaan anda. Views akan dikira & dikemas kini oleh penganjur
-          sepanjang peraduan — anda tak perlu isi angka.
+          sepanjang peraduan. 
         </p>
 
         <label className="mb-4 block">
@@ -183,6 +185,29 @@ export default function SubmissionForm({ onClose, onSuccess }) {
         >
           {submitting ? 'Menghantar…' : 'Hantar Penyertaan'}
         </button>
+
+        {contest.terms?.length > 0 && (
+          <div className="mt-3 text-center text-xs text-inksoft">
+            <p>
+              Dengan menghantar, anda bersetuju dengan{' '}
+              <button
+                type="button"
+                onClick={() => setShowTerms((v) => !v)}
+                className="font-semibold text-ink underline underline-offset-2"
+              >
+                Terma &amp; Syarat
+              </button>
+              .
+            </p>
+            {showTerms && (
+              <ol className="mt-2 list-decimal space-y-1 rounded-lg border border-line bg-cream/50 px-5 py-3 text-left leading-relaxed">
+                {contest.terms.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ol>
+            )}
+          </div>
+        )}
       </form>
     </div>
   )

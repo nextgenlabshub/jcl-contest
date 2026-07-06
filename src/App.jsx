@@ -238,8 +238,11 @@ export default function App() {
         </div>
 
         <footer className="mt-14 border-t border-line pt-6 text-center text-xs text-inksoft">
-          Kedudukan berdasarkan input peserta. Buka thread setiap peserta untuk
-          menyemak · dikuasakan NextGen Labs
+          dikuasakan{' '}
+          <span className="font-semibold text-ink">Nextgen Labs Hub</span>
+          <span className="mt-0.5 block text-inksoft/80">
+            No. Syarikat 202603146743
+          </span>
         </footer>
       </div>
 
