@@ -5,7 +5,7 @@ const steps = [
   {
     n: '01',
     title: 'Quote',
-    desc: 'Buka post utama, kemudian Quote Post — kongsikan bagaimana App Junior Code Lab boleh membantu anak-anak belajar. Boleh sertakan video, tips atau apa sahaja.',
+    desc: 'Buka post utama, kemudian Quote Post — kongsikan bagaimana App 2ndschool boleh membantu anak-anak belajar. Boleh sertakan video, tips atau apa sahaja.',
   },
   {
     n: '02',
@@ -15,7 +15,7 @@ const steps = [
   {
     n: '03',
     title: 'Daftar',
-    desc: 'Masukkan username, pautan thread & no telefon anda di sini. Views akan dikira & dikemas kini oleh penganjur — anda tak perlu isi.',
+    desc: 'Copy & paste link Quote Post anda sendiri di sini. Setiap hari ranking akan keluar — anda tak perlu kira apa-apa.',
   },
 ]
 

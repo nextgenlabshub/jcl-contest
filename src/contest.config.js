@@ -3,7 +3,7 @@
 // =============================================================
 export const contest = {
   title: 'Beat the Algo',
-  subtitle: 'Kalahkan algoritma — kumpul views terbanyak di Threads. Top 4 menang hadiah!',
+  subtitle: 'Kalahkan algoritma — kumpul views terbanyak di Threads. Top 5 menang hadiah!',
 
   // Pemenang ditentukan oleh VIEWS (impressions) tertinggi.
   // Nombor diisi peserta; disahkan dengan klik pautan thread (Threads papar
@@ -30,15 +30,16 @@ export const contest = {
   endsAt: '2026-07-16T00:00:00+08:00',
 
   // Bilangan pemenang yang dipaparkan di skrin keputusan.
-  winnersCount: 4,
+  winnersCount: 5,
 
   // (Tidak lagi digunakan) — pentadbir kini log masuk di halaman ?admin
   // guna Supabase Auth (email + kata laluan). Lihat AdminDashboard.jsx.
   adminKey: '',
 
   // Hadiah — tukar 'reward' kepada hadiah sebenar anda.
-  // `image`: letak gambar dalam folder `public/prizes/` dengan nama yang sama.
-  // Jika gambar tiada, kad auto-tunjuk ikon pingat (tiada gambar rosak).
+  // `images`: 2 gambar/kad (boleh slide) dalam folder `public/prizes/`.
+  //  Optimumkan gambar besar dulu: `npm run optimize:images`.
+  //  Jika gambar tiada, kad auto-tunjuk ikon pingat (tiada gambar rosak).
   prizes: [
     {
       place: 1,
@@ -46,21 +47,35 @@ export const contest = {
       label: 'Juara (Top 1)',
       reward:
         'Emas 999 bentuk Rose exclusive 0.1g + Gelang Silver 925 Wah Chan full set',
-      image: '/prizes/juara.jpg',
+      images: ['/prizes/tempat1-1.webp', '/prizes/tempat1-2.webp'],
     },
     {
       place: 2,
       medal: '🥈',
       label: 'Naib Juara (Top 2)',
-      reward: 'Gelang Silver Wah Chan full set',
-      image: '/prizes/naib.jpg',
+      reward: 'Gelang Silver S925 Wah Chan full set',
+      images: ['/prizes/tempat2n3-1.webp', '/prizes/tempat2n3-2.webp'],
     },
     {
       place: 3,
       medal: '🥉',
-      label: 'Tempat Ke-3 & Ke-4',
-      reward: 'Gelang Silver Wah Chan full set',
-      image: '/prizes/tempat3-4.jpg',
+      label: 'Tempat Ke-3',
+      reward: 'Gelang Silver S925 Wah Chan full set',
+      images: ['/prizes/tempat2n3-1.webp', '/prizes/tempat2n3-2.webp'],
+    },
+    {
+      place: 4,
+      medal: '🏅',
+      label: 'Tempat Ke-4',
+      reward: 'Gelang Silver S925 Wah Chan full set',
+      images: ['/prizes/tempat4n5-1.webp', '/prizes/tempat4n5-2.webp'],
+    },
+    {
+      place: 5,
+      medal: '🎖️',
+      label: 'Tempat Ke-5',
+      reward: 'Gelang Silver S925 Wah Chan full set',
+      images: ['/prizes/tempat4n5-1.webp', '/prizes/tempat4n5-2.webp'],
     },
   ],
 }
